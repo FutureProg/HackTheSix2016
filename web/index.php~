@@ -1,0 +1,18 @@
+<html>
+  <head>
+      <title>Nope</title>
+        </head>
+	  <body>
+	      <img src="http://i.giphy.com/3oEjHYuwHzWUW4uses.gif" width="100%"/>
+	          <h2>
+		      <?php
+		             $cmd = escapeshellcmd("python3 test.py");
+			            $output = shell_exec($cmd);
+				           echo $output;
+					       ?>
+					           </h2>
+						     </body>
+						     </html>
+
+
+
