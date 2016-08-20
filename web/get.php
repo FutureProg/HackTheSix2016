@@ -2,7 +2,7 @@
 include 'photo_upload.php';
 include 'recommendations.php';
 
-if(isset($_POST["UPLOAD_TEST"])){
+if(isset($_GET["UPLOAD_TEST"])){
   echo setImage();
 }
 
