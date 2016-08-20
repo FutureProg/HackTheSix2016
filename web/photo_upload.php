@@ -1,7 +1,7 @@
 <?php
+include 'database.php';
 
-function setImage(){
-  var_dump($_FILES);
+function setImage($name,$rating){
   $picturename = $_FILES[0]['name'];
   if(sizeof($_FILES[0] > 0) && $_FILES[0]['error'] == 0){
     $basename = basename($_FILES[0]['tmp_name']);
@@ -13,7 +13,9 @@ function setImage(){
     $picturename = $basename . $picturename;
     $destination = $imgloc . $picturename;
     if(move_uploaded_file($_FILES[0]['tmp_name'],$destination)){
-      echo $destination;
+      if(addToDB($name,$rating,$destination)){
+	echo $destination;      
+      }
       return;
     }else{
       echo "ERROR: unable to move file to destination during upload";
@@ -24,10 +26,22 @@ function setImage(){
 }
 
 /**
+ * Function to upload to database
+ */
+function addToDB($name,$rating,$url){
+  $db = new ImageDB();
+  if(!$db){
+    
+  }
+  $res = $db->addImage($name,$name,$rating,$url);//TODO: Change to identified name
+  
+}
+
+/**
  * TODO: Identify function that returns the result of the 
  * image analysis
  */
-function identify(){
+function identify($url){
   
 }
 
