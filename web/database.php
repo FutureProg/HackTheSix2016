@@ -29,9 +29,9 @@ class ImageDB extends SQLite3{
   
 }
 
-$db = new ImageDB();
+/*$db = new ImageDB();
 if(!$db){
   echo $db->lastErrorMsg();
 } else {
   echo "Opened database successfully\n";
-}
+  }*/
