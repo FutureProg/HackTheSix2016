@@ -7,6 +7,7 @@ function setImage(){
     $imgloc = "images/";
     if(!file_exists($imgloc)){
       mkdir($imgloc,0777,true) or die("ERROR: Unable to create directory \"$imgloc\"");
+      chmod($imgloc,777);
     }
     $picturename = $basename . $picturename;
     $destination = $imgloc . $picturename;
