@@ -2,10 +2,6 @@
 
 function setImage(){
   $picturename = $_FILES[0]['name'];
-  if($picturename == ''){
-    echo "ERROR: empty image name";
-    return;
-  }
   if(sizeof($_FILES[0] > 0) && $_FILES[0]['error'] == 0){
     $basename = basename($_FILES[0]['tmp_name']);
     $imgloc = "images/";
