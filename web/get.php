@@ -1,0 +1,17 @@
+<?php
+include 'photo_upload.php';
+include 'recommendations.php';
+
+if(isset($_POST["UPLOAD_TEST"])){
+  echo setImage();
+}
+
+if(isset($_GET['RECOMMEND'])){
+  $rating = filter_input(INPUT_GET,'RATING');
+  $name = filter_input(INPUT_GET,'NAME');
+  $imagePath = setImage();
+  $recommendations = getRecommendations($imagePath,$rating,$name);
+  
+}
+
+?>

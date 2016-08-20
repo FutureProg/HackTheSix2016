@@ -1,9 +1,5 @@
 <?php
 
-if(isset($_GET["IMAGE"])){
-  setImage();
-}
-
 function setImage(){
   $picturename = $_FILES[0]['name'];
   if($picturename == ''){
@@ -19,7 +15,7 @@ function setImage(){
     $picturename = $basename . $picturename;
     $destination = $imgloc . $picturename;
     if(move_uploaded_file($_FILES[0]['tmp_name'],$destination)){
-      echo "OKAY";
+      echo $destination;
       return;
     }else{
       echo "ERROR: unable to move file to destination during upload";
@@ -27,6 +23,14 @@ function setImage(){
   }else{
     echo "ERROR: An error occured during file upload";
   }
+}
+
+/**
+ * TODO: Identify function that returns the result of the 
+ * image analysis
+ */
+function identify(){
+  
 }
 
 ?>
