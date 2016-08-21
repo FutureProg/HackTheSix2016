@@ -94,7 +94,9 @@ def main():
     similarity_rankings = calculate_sim(matrix.values,count)
 
     chosen_img = len(matrix) -1
-    return similarity_image(chosen_img, similarity_rankings, paths)
+    result = similarity_image(chosen_img, similarity_rankings, paths)
+    print(result)
+    return result
 
 if __name__ == '__main__':
     main()
