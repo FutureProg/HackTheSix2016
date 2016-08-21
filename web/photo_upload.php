@@ -58,6 +58,7 @@ function identify($url){
   echo $cmd." ../web/$url";
   $res = shell_exec($cmd." ../web/$url");
   $res = file_get_contents("outFile");
+  echo $res;
   $res = json_decode($res);//explode(",",substr(substr($res,strlen($res)-1),1));//make array from [..,...,..]
   return $res;
 }
