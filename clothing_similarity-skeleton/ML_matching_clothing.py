@@ -23,6 +23,7 @@ def make_paths_list():
     d = []
     i = 0
     for root, dirs, files in os.walk("images"):
+        print(files)
         for image in files:
             if image.endswith(".jpg"):
                 d.append(os.path.join(root, image))
@@ -91,7 +92,9 @@ def main():
     similarity_rankings = calculate_sim(matrix.values,count)
 
     chosen_img = len(matrix) -1
-    return similarity_image(chosen_img, similarity_rankings, paths)
+    result = similarity_image(chosen_img, similarity_rankings, paths)
+    print(result)
+    return result
 
 if __name__ == '__main__':
     main()
