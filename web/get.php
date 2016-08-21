@@ -9,9 +9,8 @@ if(isset($_GET["UPLOAD_TEST"])){
 if(isset($_GET['RECOMMEND'])){
   $rating = filter_input(INPUT_GET,'RATING');
   $name = filter_input(INPUT_GET,'NAME');
-  $imagePath = setImage();
-  $recommendations = getRecommendations($imagePath,$rating,$name);
-  
+  $identity = setImage($name,$rating);
+  echo ","+$identity+"]";
 }
 
 ?>

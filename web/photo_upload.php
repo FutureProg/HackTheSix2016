@@ -12,12 +12,23 @@ function setImage($name,$rating){
     }
     $picturename = $basename . $picturename;
     $destination = $imgloc . $picturename;
-    if(move_uploaded_file($_FILES[0]['tmp_name'],$destination)){
-      if(addToDB($name,$rating,$destination)){
-	echo $destination;      
+    if(move_uploaded_file($_FILES[0]['tmp_name'],$destination)){ //upload image to server
+      $identity = identify($destination);
+      $actualname = $identity[0];
+      $res = rename($destination,$destination+"|"+$actualname+"|"+$rating); //rename to proper name
+      if($res == true){	
+	$res = addToDB($actualname,$name,$rating,$destination); //add the image to the database
+	if($res){
+	  echo "[" + $destination + "|" + $actualname + "|" + $rating;
+	  return $identity;
+	}else{
+	  echo "ERROR: Unable to move to proper name"; //unable to add to database
+	}
+      }else{
+	echo $res; //unable to rename
       }
       return;
-    }else{
+    }else{ 
       echo "ERROR: unable to move file to destination during upload";
     }
   }else{
@@ -28,13 +39,14 @@ function setImage($name,$rating){
 /**
  * Function to upload to database
  */
-function addToDB($name,$rating,$url){
+function addToDB($actualname,$name,$rating,$url){
   $db = new ImageDB();
   if(!$db){
-    
+    return "Error creating database class";
   }
-  $res = $db->addImage($name,$name,$rating,$url);//TODO: Change to identified name
-  
+  $res = $db->addImage($actualname,$name,$rating,$url);//TODO: Change to identified name  
+  $db->close();
+  return $res;
 }
 
 /**
@@ -42,7 +54,10 @@ function addToDB($name,$rating,$url){
  * image analysis
  */
 function identify($url){
-  
+  $cmd = escapeshellcmd("python3 ml.py");
+  $res = shell_exec($cmd." $url");
+  $res = explode(",",substr(substr($res,length($res-1)),1));//make array from [..,...,..]
+  return $res;
 }
 
 ?>
