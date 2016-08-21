@@ -56,7 +56,7 @@ def calculate_sim(feats,count):
 def similarity_image(chosen_img, similarity_matrix, paths):
     closestImages = []
     #new_img = Image.new('RGB', (995, 410), "#f8fafc")
-    for i in range(len(paths)):
+    for i in range(n_img_displayed):
         im_num = similarity_matrix[chosen_img][i][1]
         path = paths[im_num]
         closestImages.append(path)
