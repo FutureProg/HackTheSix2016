@@ -58,6 +58,8 @@ def similarity_image(chosen_img, similarity_matrix, paths):
     for i in range(n_img_displayed):
         im_num = similarity_matrix[chosen_img][i][1]
         if im_num != len(paths):
+	    print(im_num)
+	    print(paths)
             path = paths[im_num]
             closestImages.append(path)
             #img = Image.open(path)
@@ -74,9 +76,10 @@ def addFeatures(link):
 def main():
     print(sys.argv[1])
     paths = make_paths_list()
+    print(paths)
     matrix=None
-    if (os.path.isfile('test.csv')):
-        matrix =pd.read_csv('test.csv')
+    if (os.path.isfile('../clothing_similarity-skeleton/test.csv')):
+        matrix =pd.read_csv('../clothing_similarity-skeleton/test.csv')
         matrix = matrix.drop('Unnamed: 0',axis=1)
     else:
         feats = make_feats(paths)
@@ -85,7 +88,7 @@ def main():
     newRow = addFeatures(sys.argv[1])
     paths.append(sys.argv[1])
     matrix.loc[len(matrix)] = newRow
-    matrix.to_csv('test.csv')
+    matrix.to_csv('../clothing_similarity-skeleton/test.csv')
 
     count = len(matrix)
     similarity_rankings = calculate_sim(matrix.values,count)
