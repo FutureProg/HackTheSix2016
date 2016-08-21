@@ -57,7 +57,7 @@ function identify($url){
   $cmd = escapeshellcmd("python ../clothing_similarity-skeleton/ML_matching_clothing.py");
   //echo $cmd." ../web/$url";
   $res = shell_exec($cmd." ../web/$url");
-  $res = file_get_contents("outFile");
+  $res = file_get_contents("../clothing_similarity-skeleton/outFile");
   $res = stripslashes($res);
   //  $res = json_decode($res);//explode(",",substr(substr($res,strlen($res)-1),1));//make array from [..,...,..]
   return $res;
