@@ -15,15 +15,15 @@ import indicoio
 indicoio.config.api_key = '3a4fd542fc406583be1dd66a1567f6a4'
 
 # number of images to compare with input for match
-N_IMG = 10
+N_IMG = 200
 
 # number of images displayed
-n_img_displayed = 10
+n_img_displayed = 13
 
 def make_paths_list(count):
     d = []
     i = 0
-    for root, dirs, files in os.walk("../clothing_similarity-skeleton/images"):
+    for root, dirs, files in os.walk("../clothing_similarity-skeleton/images_food"):
         for image in files:
             if image.endswith(".jpg"):
                 d.append(os.path.join(root, image))
@@ -86,11 +86,10 @@ def main():
         feats = make_feats(paths)
         matrix = pd.DataFrame(feats)
 
+    matrix.to_csv('../clothing_similarity-skeleton/test.csv')
     newRow = addFeatures(sys.argv[1])
     paths.append(sys.argv[1])
     matrix.loc[len(matrix)] = newRow
-
-    matrix.to_csv('../clothing_similarity-skeleton/test.csv')
 
     count = len(matrix)
 
@@ -99,7 +98,7 @@ def main():
 
     chosen_img = len(matrix) -1
     result = similarity_image(chosen_img, similarity_rankings, paths)
-    with open('outFile', 'w') as outfile:
+    with open('../clothing_similarity-skeleton/outFile', 'w') as outfile:
         json.dump(result, outfile)
     return result
 
