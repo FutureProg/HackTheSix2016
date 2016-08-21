@@ -56,7 +56,7 @@ def calculate_sim(feats,count):
 def similarity_image(chosen_img, similarity_matrix, paths):
     closestImages = []
     #new_img = Image.new('RGB', (995, 410), "#f8fafc")
-    for i in range(len(paths)):
+    for i in range(n_img_displayed):
         im_num = similarity_matrix[chosen_img][i][1]
         path = paths[im_num]
         closestImages.append(path)
@@ -73,20 +73,25 @@ def addFeatures(link):
 
 def main():
     print(sys.argv[1])
+
     matrix=None
-    count = 0
-    if (os.path.isfile('test.csv')):
-        matrix =pd.read_csv('test.csv')
+    count=0
+    paths= []
+    if (os.path.isfile('../clothing_similarity-skeleton/test.csv')):
+        matrix =pd.read_csv('../clothing_similarity-skeleton/test.csv')
         paths = make_paths_list(len(matrix))
         matrix = matrix.drop('Unnamed: 0',axis=1)
     else:
+        paths = make_paths_list(N_IMG)
         feats = make_feats(paths)
         matrix = pd.DataFrame(feats)
 
     newRow = addFeatures(sys.argv[1])
     paths.append(sys.argv[1])
     matrix.loc[len(matrix)] = newRow
-    matrix.to_csv('test.csv')
+
+    matrix.to_csv('../clothing_similarity-skeleton/test.csv')
+
     count = len(matrix)
 
     similarity_rankings = calculate_sim(matrix.values,count)
