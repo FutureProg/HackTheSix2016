@@ -3,6 +3,7 @@ import os
 from random import sample
 import pandas as pd
 import cPickle as pickle
+import json
 
 from scipy import spatial
 import sys
@@ -91,7 +92,10 @@ def main():
     similarity_rankings = calculate_sim(matrix.values,count)
 
     chosen_img = len(matrix) -1
-    return similarity_image(chosen_img, similarity_rankings, paths)
+    result = similarity_image(chosen_img, similarity_rankings, paths)
+    with open('outFile', 'w') as outfile:
+        json.dump(result, outfile)
+    return result
 
 if __name__ == '__main__':
     main()
