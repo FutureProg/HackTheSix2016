@@ -17,7 +17,7 @@ function setImage($name,$rating){
       $actualname = $identity[0];
       $res = rename($destination,$destination+"|"+$actualname+"|"+$rating); //rename to proper name
       if($res == true){	
-	$res = addToDB($actualname,$name,$rating,$destination); //add the image to the database
+	$res = true;//addToDB($actualname,$name,$rating,$destination); //add the image to the database
 	if($res){
 	  echo "[" + $destination + "|" + $actualname + "|" + $rating;
 	  return $identity;
