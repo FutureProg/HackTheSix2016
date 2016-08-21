@@ -15,11 +15,11 @@ function setImage($name,$rating){
     if(move_uploaded_file($_FILES[0]['tmp_name'],$destination)){ //upload image to server
       $identity = identify($destination);
       $actualname = $identity[0];
-      $res = rename($destination,$destination+"|"+$actualname+"|"+$rating); //rename to proper name
+      $res = rename($destination,$destination."|".$actualname."|".$rating); //rename to proper name
       if($res == true){	
 	$res = true;//addToDB($actualname,$name,$rating,$destination); //add the image to the database
 	if($res){
-	  echo "[" + $destination + "|" + $actualname + "|" + $rating;
+	  echo "[".$destination."|".$actualname."|".$rating;
 	  return $identity;
 	}else{
 	  echo "ERROR: Unable to move to proper name"; //unable to add to database
