@@ -7,8 +7,7 @@ class ImageDB extends SQLite3{
   }
 
   function addImage($name,$givenname,$rating,$path){
-    $query = "INSERT INTO Images (name,given_name,rating,path)"
-      ." VALUES ($name,$givenname,$rating,$path);";
+    $query = "INSERT INTO Images (name,given_name,rating,path) VALUES ($name,$givenname,$rating,$path);";
     $re = $this->exec($query);
     if(!$re){
       return $this->lastErrorMsg();

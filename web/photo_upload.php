@@ -1,5 +1,4 @@
 <?php
-
 include 'database.php';
 
 function setImage($name,$rating){
@@ -18,7 +17,7 @@ function setImage($name,$rating){
       $actualname = $identity[0];
       $res = rename($destination,$destination+"|"+$actualname+"|"+$rating); //rename to proper name
       if($res == true){	
-	$res = addToDB($actualname,$name,$rating,$destination); //add the image to the database
+	$res = true;//addToDB($actualname,$name,$rating,$destination); //add the image to the database
 	if($res){
 	  echo "[" + $destination + "|" + $actualname + "|" + $rating;
 	  return $identity;
@@ -55,9 +54,9 @@ function addToDB($actualname,$name,$rating,$url){
  * image analysis
  */
 function identify($url){
-  $cmd = escapeshellcmd("python3 ml.py");
-  $res = shell_exec($cmd." $url");
-  $res = explode(",",substr(substr($res,length($res-1)),1));//make array from [..,...,..]
+  $cmd = escapeshellcmd("python ../clothing_similarity-skeleton/ML_matching_clothing.py");
+  $res = shell_exec($cmd." ../web/$url");
+  $res = explode(",",substr(substr($res,strlen($res)-1),1));//make array from [..,...,..]
   return $res;
 }
 
