@@ -7,37 +7,30 @@ class ImageDB extends SQLite3{
   }
 
   function addImage($name,$givenname,$rating,$path){
-    $query =<<<EOF
-      INSERT INTO Images (name,given_name,rating,path)
-      VALUES ($name,$givenname,$rating,$path);
-    EOF;
+    $query = "INSERT INTO Images (name,given_name,rating,path) VALUES ($name,$givenname,$rating,$path);";
     $re = $this->exec($query);
     if(!$re){
-      echo $this->lastErrorMsg();
+      return $this->lastErrorMsg();
     } else {
-      echo "OKAY";
+      return true;
     }
   }
 
   function findImages($name){
-    $query =<<<EOF
-      SELECT * FROM Images WHERE name=$name;
-    EOF;
+    $query ="SELECT * FROM Images WHERE name=$name;";
     $re = $this->exec($query);
     if(!$re){
-      echo $this->lastErrorMsg();
+      return $this->lastErrorMsg();
     }else{
-      echo "OKAY";
+      return true;
     }
   }
   
 }
 
-$db = new ImageDB();
+/*$db = new ImageDB();
 if(!$db){
   echo $db->lastErrorMsg();
 } else {
   echo "Opened database successfully\n";
-}
-
-
+  }*/
