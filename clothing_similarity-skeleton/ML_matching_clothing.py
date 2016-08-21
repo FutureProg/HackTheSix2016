@@ -1,9 +1,11 @@
 import math
 import os
 from random import sample
+import pandas as pd
 import cPickle as pickle
 
 from scipy import spatial
+import sys
 from PIL import Image
 import numpy as np
 import indicoio
@@ -12,7 +14,7 @@ import indicoio
 indicoio.config.api_key = '3a4fd542fc406583be1dd66a1567f6a4'
 
 # number of images to compare with input for match
-N_IMG = 100
+N_IMG = 10
 
 # number of images displayed
 n_img_displayed = 10
@@ -35,14 +37,14 @@ def make_feats(paths):
         feats.append(indicoio.image_features(image, batch=False))
     return feats
 
-def calculate_sim(feats):
+def calculate_sim(feats,count):
     distances = spatial.distance.pdist(np.matrix(feats), 'euclidean')
     m = []
     q = lambda i,j,n: n*(n-1)/2 - (n-i)*(n-i-1)/2 + j - i - 1
-    for i in range(N_IMG):
+    for i in range(count):
         r = []
-        for j in range(N_IMG):
-            tup = (distances[q(i,j,N_IMG)], j)
+        for j in range(count):
+            tup = (distances[q(i,j,count)], j)
             if i == j:
                 tup = (0, j)
             r.append(tup)
@@ -51,45 +53,48 @@ def calculate_sim(feats):
     return m
 
 def similarity_image(chosen_img, similarity_matrix, paths):
-    new_img = Image.new('RGB', (995, 410), "#f8fafc")
+    closestImages = []
+    #new_img = Image.new('RGB', (995, 410), "#f8fafc")
     for i in range(n_img_displayed):
         im_num = similarity_matrix[chosen_img][i][1]
-        path = paths[im_num]
-        img = Image.open(path)
-        img.thumbnail((200, 200))
-        pos = ((i % 5) * 210, int(math.floor(i / 5.0) * 210))
-        new_img.paste(img, pos)
-        new_img.save('output/'+ str(N_IMG) + 'if' + str(chosen_img) + '.jpg')
-    new_img.show()
+        if im_num != len(paths):
+            path = paths[im_num]
+            closestImages.append(path)
+            #img = Image.open(path)
+            #img.thumbnail((200, 200))
+            #pos = ((i % 5) * 210, int(math.floor(i / 5.0) * 210))
+            #new_img.paste(img, pos)
+            #new_img.save('output/'+ str(N_IMG) + 'if' + str(chosen_img) + '.jpg')
+    #new_img.show()
+    return closestImages
 
+def addFeatures(link):
+    return np.array(indicoio.image_features(link, batch=False))
 
+def main():
+    print(sys.argv[1])
+    paths = make_paths_list()
+    matrix=None
+    if (os.path.isfile('test.csv')):
+        matrix =pd.read_csv('test.csv')
+        matrix = matrix.drop('Unnamed: 0',axis=1)
+    else:
+        feats = make_feats(paths)
+        matrix = pd.DataFrame(feats)
 
-"""
-paths = pickle.load(open('paths.pkl', 'rb'))
-paths = make_paths_list()
-pickle.dump(paths, open('paths.pkl', 'wb'))
+    newRow = addFeatures(sys.argv[1])
+    paths.append(sys.argv[1])
+    matrix.loc[len(matrix)] = newRow
+    matrix.to_csv('test.csv')
 
-similarity_rankings = pickle.load(open('similarity_rankings.pkl', 'rb'))
-feats = make_feats(paths)
-similarity_rankings = calculate_sim(feats)
-pickle.dump(similarity_rankings, open('similarity_rankings.pkl', 'wb'))
+    count = len(matrix)
+    similarity_rankings = calculate_sim(matrix.values,count)
 
-chosen_images = sample(xrange(N_IMG), 3)
-for k in range(len(chosen_images)):
-    chosen_img = chosen_images[k]
-    similarity_image(chosen_img, similarity_rankings, paths)"""
+    chosen_img = len(matrix) -1
+    return similarity_image(chosen_img, similarity_rankings, paths)
 
-paths = make_paths_list()
-feats = make_feats(paths)
-similarity_rankings = calculate_sim(feats)
-print similarity_rankings
-
-chosen_images = sample(xrange(N_IMG), 3)
-for k in range(len(chosen_images)):
-    chosen_img = chosen_images[k]
-    similarity_image(chosen_img, similarity_rankings, paths)
-
-
+if __name__ == '__main__':
+    main()
 
 
 
