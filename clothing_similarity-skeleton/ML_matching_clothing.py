@@ -22,7 +22,7 @@ n_img_displayed = 10
 def make_paths_list():
     d = []
     i = 0
-    for root, dirs, files in os.walk("images"):
+    for root, dirs, files in os.walk("../clothing_similarity-skeleton/images"):
         for image in files:
             if image.endswith(".jpg"):
                 d.append(os.path.join(root, image))
