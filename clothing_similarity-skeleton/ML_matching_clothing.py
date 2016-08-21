@@ -20,7 +20,7 @@ N_IMG = 10
 # number of images displayed
 n_img_displayed = 10
 
-def make_paths_list():
+def make_paths_list(count):
     d = []
     i = 0
     for root, dirs, files in os.walk("../clothing_similarity-skeleton/images"):
@@ -28,7 +28,7 @@ def make_paths_list():
             if image.endswith(".jpg"):
                 d.append(os.path.join(root, image))
                 i += 1
-                if i == N_IMG:
+                if i == count:
                     return d
 
 
@@ -56,13 +56,10 @@ def calculate_sim(feats,count):
 def similarity_image(chosen_img, similarity_matrix, paths):
     closestImages = []
     #new_img = Image.new('RGB', (995, 410), "#f8fafc")
-    for i in range(n_img_displayed):
+    for i in range(len(paths)):
         im_num = similarity_matrix[chosen_img][i][1]
-        if im_num != len(paths):
-	    print(im_num)
-	    print(paths)
-            path = paths[im_num]
-            closestImages.append(path)
+        path = paths[im_num]
+        closestImages.append(path)
             #img = Image.open(path)
             #img.thumbnail((200, 200))
             #pos = ((i % 5) * 210, int(math.floor(i / 5.0) * 210))
@@ -76,23 +73,29 @@ def addFeatures(link):
 
 def main():
     print(sys.argv[1])
-    paths = make_paths_list()
-    print(paths)
+
     matrix=None
+    count=0
+    paths= []
     if (os.path.isfile('../clothing_similarity-skeleton/test.csv')):
         matrix =pd.read_csv('../clothing_similarity-skeleton/test.csv')
+        paths = make_paths_list(len(matrix))
         matrix = matrix.drop('Unnamed: 0',axis=1)
     else:
+        paths = make_paths_list(N_IMG)
         feats = make_feats(paths)
         matrix = pd.DataFrame(feats)
 
     newRow = addFeatures(sys.argv[1])
     paths.append(sys.argv[1])
     matrix.loc[len(matrix)] = newRow
+
     matrix.to_csv('../clothing_similarity-skeleton/test.csv')
 
     count = len(matrix)
+
     similarity_rankings = calculate_sim(matrix.values,count)
+    print(len(similarity_rankings))
 
     chosen_img = len(matrix) -1
     result = similarity_image(chosen_img, similarity_rankings, paths)
