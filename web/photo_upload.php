@@ -55,6 +55,7 @@ function addToDB($actualname,$name,$rating,$url){
  */
 function identify($url){
   $cmd = escapeshellcmd("python ../clothing_similarity-skeleton/ML_matching_clothing.py");
+  echo $cmd." ../web/$url";
   $res = shell_exec($cmd." ../web/$url");
   $res = explode(",",substr(substr($res,strlen($res)-1),1));//make array from [..,...,..]
   return $res;
