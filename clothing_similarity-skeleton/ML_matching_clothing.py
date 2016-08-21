@@ -18,7 +18,7 @@ indicoio.config.api_key = '3a4fd542fc406583be1dd66a1567f6a4'
 N_IMG = 10
 
 # number of images displayed
-n_img_displayed = 10
+n_img_displayed = 12
 
 def make_paths_list(count):
     d = []
@@ -55,18 +55,28 @@ def calculate_sim(feats,count):
 
 def similarity_image(chosen_img, similarity_matrix, paths):
     closestImages = []
+    orderArr = []
     #new_img = Image.new('RGB', (995, 410), "#f8fafc")
     for i in range(n_img_displayed):
-        im_num = similarity_matrix[chosen_img][i][1]
-        path = paths[im_num]
-        closestImages.append(path)
+        orderArr.append(getClosestDist(similarity_matrix,chosen_img,closestImages,orderArr))
             #img = Image.open(path)
             #img.thumbnail((200, 200))
             #pos = ((i % 5) * 210, int(math.floor(i / 5.0) * 210))
             #new_img.paste(img, pos)
             #new_img.save('output/'+ str(N_IMG) + 'if' + str(chosen_img) + '.jpg')
     #new_img.show()
-    return closestImages
+    return orderArr
+
+def getClosestDist(similarity_matrix,chosen_img,closestImages,orderArr):
+    min = len(similarity_matrix)
+    for itemC in range(len(similarity_matrix[chosen_img])):
+        print(similarity_matrix[chosen_img][itemC][1])
+        if similarity_matrix[chosen_img][itemC][1] < min and similarity_matrix[chosen_img][itemC][1] not in closestImages:
+            min = similarity_matrix[chosen_img][itemC][1]
+            elem = itemC
+    closestImages.append(min)
+    return elem
+
 
 def addFeatures(link):
     return np.array(indicoio.image_features(link, batch=False))
@@ -91,19 +101,17 @@ def main():
     count = len(matrix)
 
     similarity_rankings = calculate_sim(matrix.values,count)
-    print(len(similarity_rankings))
+    print(pd.DataFrame(similarity_rankings))
 
     chosen_img = len(matrix) -1
     result = similarity_image(chosen_img, similarity_rankings, paths)
+    print(result)
     with open('outFile', 'w') as outfile:
         json.dump(result, outfile)
     return result
 
 if __name__ == '__main__':
     main()
-
-
-
 
 
 
